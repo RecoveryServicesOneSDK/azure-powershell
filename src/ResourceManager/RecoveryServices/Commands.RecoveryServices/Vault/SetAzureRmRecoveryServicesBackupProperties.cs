@@ -38,6 +38,11 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         /// </summary>
         [Parameter(Mandatory = false)]
         public string BackupStorageRedundancy { get; set; }
+        /// <summary>
+        /// Gets or sets BackupStorageDeduplication type.
+        /// </summary>
+        [Parameter(Mandatory = false)]
+        public string BackupStorageDeduplication { get; set; }
 
         #endregion Parameters
 
@@ -48,11 +53,13 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         {
             try
             {
-                if (!string.IsNullOrEmpty(this.BackupStorageRedundancy))
+                // If both attributes are not null
+                if (!(string.IsNullOrEmpty(this.BackupStorageRedundancy) && string.IsNullOrEmpty(this.BackupStorageDeduplication)))
                 {
                     UpdateVaultStorageTypeRequest vaultStorageRequest = new UpdateVaultStorageTypeRequest();
                     vaultStorageRequest.Properties = new StorageTypeProperties();
-                    vaultStorageRequest.Properties.StorageModelType = BackupStorageRedundancy;
+                    vaultStorageRequest.Properties.StorageModelType = this.BackupStorageRedundancy;
+                    vaultStorageRequest.Properties.DedupState = this.BackupStorageDeduplication;
                     AzureOperationResponse storageResponse = RecoveryServicesClient.UpdateVaultStorageType(this.Vault.ResouceGroupName, this.Vault.Name, vaultStorageRequest);
                 }
             }

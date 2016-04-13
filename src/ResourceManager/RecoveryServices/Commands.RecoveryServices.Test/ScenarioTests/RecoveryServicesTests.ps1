@@ -39,9 +39,10 @@ function Test-RecoveryServicesVaultCRUDTests
 
 	$vaultBackupProperties = Get-AzureRmRecoveryServicesBackupProperties -Vault $vaultCreationResponse
 	Assert-NotNull($vaultBackupProperties.BackupStorageRedundancy)
+	Assert-NotNull($vaultBackupProperties.BackupStorageDeduplication)
 
 	Set-AzureRmRecoveryServicesBackupProperties -Vault $vaultCreationResponse -BackupStorageRedundancy "LocallyRedundant"
-
+	Set-AzureRmRecoveryServicesBackupProperties -Vault $vaultCreationResponse -BackupStorageRedundancy "GeoRedundant" -BackupStorageDeduplication "Enabled"
 	# Get the created vault
 	$vaultToBeRemoved = Get-AzureRmRecoveryServicesVault -ResourceGroupName vishakintdrg -Name rsv1
 	Assert-NotNull($vaultToBeRemoved.Name)

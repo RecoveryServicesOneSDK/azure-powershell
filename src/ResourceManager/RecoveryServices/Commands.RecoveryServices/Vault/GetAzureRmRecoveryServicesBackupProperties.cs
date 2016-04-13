@@ -48,6 +48,7 @@ namespace Microsoft.Azure.Commands.RecoveryServices
                 GetResourceStorageConfigResponse getStorageResponse = RecoveryServicesClient.GetVaultStorageType(this.Vault.ResouceGroupName, this.Vault.Name);
                 ASRVaultBackupProperties vaultBackupProperties = new ASRVaultBackupProperties();
                 vaultBackupProperties.BackupStorageRedundancy = getStorageResponse.Properties.StorageType;
+                vaultBackupProperties.BackupStorageDeduplication = getStorageResponse.Properties.DedupState;
                 this.WriteObject(vaultBackupProperties);
             }
             catch (Exception exception)

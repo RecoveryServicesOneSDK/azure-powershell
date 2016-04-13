@@ -153,6 +153,11 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         /// </summary>
         public string BackupStorageRedundancy { get; set; }
 
+        /// <summary>
+        /// Gets or sets BackupStorageDeduplication type.
+        /// </summary>
+        public string BackupStorageDeduplication { get; set; }
+
         #endregion
     }
 
