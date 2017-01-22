@@ -12,19 +12,19 @@
 // limitations under the License.
 // ----------------------------------------------------------------------------------
 
+using Microsoft.Azure.Commands.Common.Authentication.Models;
+using Microsoft.Azure.Commands.RecoveryServices.Properties;
+using Microsoft.Azure.Management.RecoveryServices.Models;
+using Microsoft.Azure.Portal.RecoveryServices.Models.Common;
 using System;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Management.Automation;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.Azure.Common.Authentication.Models;
-using Microsoft.Azure.Portal.RecoveryServices.Models.Common;
-using System.IO;
-using System.Xml;
 using System.Runtime.Serialization;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Globalization;
-using Microsoft.Azure.Management.RecoveryServices.Models;
-using Microsoft.Azure.Commands.RecoveryServices.Properties;
+using System.Xml;
 
 namespace Microsoft.Azure.Commands.RecoveryServices
 {
@@ -38,7 +38,7 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         /// <summary>
         /// Expiry in hours for generated certificate.
         /// </summary>
-        private const int VaultCertificateExpiryInHoursForHRM = 120;
+        private const int VaultCertificateExpiryInHoursForHRM = 120; 
 
         /// <summary>
         /// Expiry in hours for generated certificate.
@@ -57,14 +57,14 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         /// <summary>
         /// Gets or sets Site Identifier.
         /// </summary>
-        [Parameter(ParameterSetName = ASRParameterSets.ForSite, Mandatory = true)]
+        [Parameter(ParameterSetName = ARSParameterSets.ForSite, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public String SiteIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets SiteFriendlyName.
         /// </summary>
-        [Parameter(ParameterSetName = ASRParameterSets.ForSite, Mandatory = true)]
+        [Parameter(ParameterSetName = ARSParameterSets.ForSite, Mandatory = true)]
         [ValidateNotNullOrEmpty]
         public String SiteFriendlyName { get; set; }
 
@@ -83,8 +83,8 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         /// <summary>
         /// Gets or sets vault Object.
         /// </summary>
-        [Parameter(ParameterSetName = ASRParameterSets.ByDefault, Mandatory = false)]
-        [Parameter(ParameterSetName = ASRParameterSets.ForSite, Mandatory = false)]
+        [Parameter(ParameterSetName = ARSParameterSets.ByDefault, Mandatory = false)]
+        [Parameter(ParameterSetName = ARSParameterSets.ForSite, Mandatory = false)]
         public SwitchParameter SiteRecovery
         {
             get { return siteRecovery; }
@@ -98,7 +98,7 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         /// <summary>
         /// Gets or sets vault Object.
         /// </summary>
-        [Parameter(ParameterSetName = "ForBackup", Mandatory = true)]
+        [Parameter(ParameterSetName = ARSParameterSets.ForBackupVaultType, Mandatory = true)]
         public SwitchParameter Backup
         {
             get { return backup; }
@@ -123,7 +123,6 @@ namespace Microsoft.Azure.Commands.RecoveryServices
                 {
                     this.GetVaultSettingsFile();
                 }
-
             }
             catch (AggregateException aggregateEx)
             {
@@ -148,7 +147,7 @@ namespace Microsoft.Azure.Commands.RecoveryServices
 
             if (!string.IsNullOrEmpty(this.SiteIdentifier) && !string.IsNullOrEmpty(this.SiteFriendlyName))
             {
-                site.ID = this.SiteIdentifier;
+                site.ID = this.SiteIdentifier; 
                 site.Name = this.SiteFriendlyName;
             }
 
@@ -212,7 +211,8 @@ namespace Microsoft.Azure.Commands.RecoveryServices
                                       subscriptionId, this.Vault.ResouceGroupName, this.Vault.Name, targetLocation));
 
             // Generate certificate
-            X509Certificate2 cert = CertUtils.CreateSelfSignedCertificate(VaultCertificateExpiryInHoursForBackup, subscriptionId.ToString(), this.Vault.Name);
+            X509Certificate2 cert = CertUtils.CreateSelfSignedCertificate(
+                VaultCertificateExpiryInHoursForBackup, subscriptionId.ToString(), this.Vault.Name);
 
             AcsNamespace acsNamespace = null;
             string channelIntegrityKey = string.Empty;
@@ -231,11 +231,12 @@ namespace Microsoft.Azure.Commands.RecoveryServices
             // generate vault credentials
             string vaultCredsFileContent = GenerateVaultCreds(cert, subscriptionId, acsNamespace);
 
-            // NOTE: One of the scenarios for this cmdlet is to generate a file which will be an input to DPM servers. 
+            // NOTE: One of the scenarios for this cmdlet is to generate a file which will be an input 
+            //       to DPM servers. 
             //       We found a bug in the DPM UI which is looking for a particular namespace in the input file.
             //       The below is a hack to circumvent this issue and this would be removed once the bug can be fixed.
             vaultCredsFileContent = vaultCredsFileContent.Replace("Microsoft.Azure.Commands.AzureBackup.Models",
-                                                                  "Microsoft.Azure.Portal.RecoveryServices.Models.Common");
+                "Microsoft.Azure.Portal.RecoveryServices.Models.Common");
 
             // prepare for download
             string fileName = string.Format("{0}_{1:ddd MMM dd yyyy}.VaultCredentials", displayName, DateTime.UtcNow);
@@ -291,17 +292,19 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         /// <param name="subscriptionId">subscription Id</param>
         /// <param name="acsNamespace">acs namespace</param>
         /// <returns>xml file in string format</returns>
-        private string GenerateVaultCredsForBackup(X509Certificate2 cert, string subscriptionId, AcsNamespace acsNamespace)
+        private string GenerateVaultCredsForBackup(X509Certificate2 cert, string subscriptionId, 
+            AcsNamespace acsNamespace)
         {
             using (var output = new MemoryStream())
             {
                 using (var writer = XmlWriter.Create(output, GetXmlWriterSettings()))
                 {
-                    BackupVaultCreds backupVaultCreds = new BackupVaultCreds(subscriptionId,
-                                                                             this.Vault.Name,
-                                                                             CertUtils.SerializeCert(cert, X509ContentType.Pfx),
-                                                                             acsNamespace,
-                                                                             GetAgentLinks());
+                    BackupVaultCreds backupVaultCreds = 
+                        new BackupVaultCreds(subscriptionId,
+                            this.Vault.Name,
+                            CertUtils.SerializeCert(cert, X509ContentType.Pfx),
+                            acsNamespace,
+                            GetAgentLinks());
                     DataContractSerializer serializer = new DataContractSerializer(typeof(BackupVaultCreds));
                     serializer.WriteObject(writer, backupVaultCreds);
 

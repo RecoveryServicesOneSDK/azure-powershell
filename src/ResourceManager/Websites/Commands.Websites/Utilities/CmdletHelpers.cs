@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.Azure.Commands.Resources.Models;
+using Microsoft.Azure.Management.WebSites.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Azure.Management.WebSites.Models;
-using Microsoft.Azure.Commands.Resources.Models;
 
 namespace Microsoft.Azure.Commands.WebApps.Utilities
 {
@@ -37,6 +37,13 @@ namespace Microsoft.Azure.Commands.WebApps.Utilities
 
         private static readonly Dictionary<string, int> WorkerSizes = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase) { { "Small", 1 }, { "Medium", 2 }, { "Large", 3 }, { "ExtraLarge", 4 } };
 
+        private const string ProductionSlotName = "Production";
+
+        private const string FmtSiteWithSlotName = "{0}({1})";
+        public const string ApplicationServiceEnvironmentResourcesName = "hostingEnvironments";
+        private const string ApplicationServiceEnvironmentResourceIdFormat =
+            "/subscriptions/{0}/resourcegroups/{1}/providers/Microsoft.Web/{2}/{3}";
+
         public static Dictionary<string, string> ConvertToStringDictionary(this Hashtable hashtable)
         {
             return hashtable == null ? null : hashtable.Cast<DictionaryEntry>()
@@ -49,8 +56,8 @@ namespace Microsoft.Azure.Commands.WebApps.Utilities
                 .ToDictionary(
                 kvp => kvp.Key.ToString(), kvp =>
                 {
-                    var typeValuePair = new Hashtable((Hashtable) kvp.Value, StringComparer.OrdinalIgnoreCase);
-                    var type = (DatabaseServerType?)Enum.Parse(typeof (DatabaseServerType), typeValuePair["Type"].ToString(), true);
+                    var typeValuePair = new Hashtable((Hashtable)kvp.Value, StringComparer.OrdinalIgnoreCase);
+                    var type = (DatabaseServerType?)Enum.Parse(typeof(DatabaseServerType), typeValuePair["Type"].ToString(), true);
                     return new ConnStringValueTypePair
                     {
                         Type = type,
@@ -71,6 +78,18 @@ namespace Microsoft.Azure.Commands.WebApps.Utilities
             }
 
             return result;
+        }
+
+        internal static HostingEnvironmentProfile CreateHostingEnvironmentProfile(string subscriptionId, string resourceGroupName, string aseResourceGroupName, string aseName)
+        {
+            var rg = string.IsNullOrEmpty(aseResourceGroupName) ? resourceGroupName : aseResourceGroupName;
+            var aseResourceId = CmdletHelpers.GetApplicationServiceEnvironmentResourceId(subscriptionId, rg, aseName);
+            return new HostingEnvironmentProfile
+            {
+                Id = aseResourceId,
+                Type = CmdletHelpers.ApplicationServiceEnvironmentResourcesName,
+                Name = aseName
+            };
         }
 
         internal static string BuildMetricFilter(DateTime? startTime, DateTime? endTime, string timeGrain, IReadOnlyList<string> metricNames)
@@ -206,6 +225,22 @@ namespace Microsoft.Azure.Commands.WebApps.Utilities
             slotName = null;
 
             return false;
+        }
+
+        public static string GenerateSiteWithSlotName(string siteName, string slotName)
+        {
+            if (!string.IsNullOrEmpty(slotName) && !string.Equals(slotName, ProductionSlotName, StringComparison.OrdinalIgnoreCase))
+            {
+                return string.Format(FmtSiteWithSlotName, siteName, slotName);
+            }
+
+            return siteName;
+        }
+
+        internal static string GetApplicationServiceEnvironmentResourceId(string subscriptionId, string resourceGroupName, string applicationServiceEnvironmentName)
+        {
+            return string.Format(ApplicationServiceEnvironmentResourceIdFormat, subscriptionId, resourceGroupName, ApplicationServiceEnvironmentResourcesName,
+                applicationServiceEnvironmentName);
         }
 
         internal static HostNameSslState[] GetHostNameSslStatesFromSiteResponse(Site site, string hostName = null)

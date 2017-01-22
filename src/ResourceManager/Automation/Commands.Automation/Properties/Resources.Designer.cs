@@ -97,6 +97,15 @@ namespace Microsoft.Azure.Commands.Automation.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The node configuration &apos;{0}&apos; is currently assigned to one or more nodes. Either specify the IgnoreNodeMappings parameter, or reassign these nodes to a different node configuration, to delete this node configuration..
+        /// </summary>
+        internal static string CannotDeleteNodeConfiguration {
+            get {
+                return ResourceManager.GetString("CannotDeleteNodeConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The certificate already exists. Certificate name: {0}..
         /// </summary>
         internal static string CertificateAlreadyExists {
@@ -349,11 +358,29 @@ namespace Microsoft.Azure.Commands.Automation.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Job completion maximum wait time reached..
+        /// </summary>
+        internal static string JobCompletionMaxWaitReached {
+            get {
+                return ResourceManager.GetString("JobCompletionMaxWaitReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Job having Id: {0} was not found..
         /// </summary>
         internal static string JobNotFound {
             get {
                 return ResourceManager.GetString("JobNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Job progress state : Id {0}, state {1}, time {2}&quot;.
+        /// </summary>
+        internal static string JobProgressState {
+            get {
+                return ResourceManager.GetString("JobProgressState", resourceCulture);
             }
         }
         
@@ -376,6 +403,15 @@ namespace Microsoft.Azure.Commands.Automation.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Job terminal state : Id {0}, state {1}, time {2}&quot;.
+        /// </summary>
+        internal static string JobTerminalState {
+            get {
+                return ResourceManager.GetString("JobTerminalState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Metaconfig already exists. Specify the parameter to force an overwrite. File: {0}.
         /// </summary>
         internal static string MetaconfigAlreadyExists {
@@ -390,6 +426,15 @@ namespace Microsoft.Azure.Commands.Automation.Properties {
         internal static string ModuleNotFound {
             get {
                 return ResourceManager.GetString("ModuleNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For monthly occurrence, both day of week and occurrence need to be specified..
+        /// </summary>
+        internal static string MonthlyScheduleNeedsDayOfWeekAndOccurrence {
+            get {
+                return ResourceManager.GetString("MonthlyScheduleNeedsDayOfWeekAndOccurrence", resourceCulture);
             }
         }
         
@@ -552,6 +597,15 @@ namespace Microsoft.Azure.Commands.Automation.Properties {
         internal static string RemoveDscNodeWarning {
             get {
                 return ResourceManager.GetString("RemoveDscNodeWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to remove the Azure Automation {0}? Note: Any DSC node configurations under this DSC configuration will not be removed..
+        /// </summary>
+        internal static string RemovingAzureAutomationDscConfigurationWarning {
+            get {
+                return ResourceManager.GetString("RemovingAzureAutomationDscConfigurationWarning", resourceCulture);
             }
         }
         

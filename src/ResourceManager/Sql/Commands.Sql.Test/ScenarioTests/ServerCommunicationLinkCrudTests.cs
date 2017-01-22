@@ -13,31 +13,35 @@
 // ----------------------------------------------------------------------------------
 
 using Microsoft.Azure.Commands.ScenarioTest.SqlTests;
+using Microsoft.Azure.ServiceManagemenet.Common.Models;
 using Microsoft.WindowsAzure.Commands.ScenarioTest;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.Azure.Commands.Sql.Test.ScenarioTests
 {
     public class ServerCommunicationLinkCrudTests : SqlTestsBase
     {
-        // TODO: adumitr: re-enable the tests when feature is fully enabled in the region the tests use
-        // [Fact]
+        public ServerCommunicationLinkCrudTests(ITestOutputHelper output)
+        {
+            XunitTracingInterceptor.AddToContext(new XunitTracingInterceptor(output));
+        }
+
+        [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestServerCommunicationLinkCreate()
         {
             RunPowerShellTest("Test-CreateServerCommunicationLink");
         }
 
-        // TODO: adumitr: re-enable the tests when feature is fully enabled in the region the tests use
-        // [Fact]
+        [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestServerCommunicationLinkGet()
         {
             RunPowerShellTest("Test-GetServerCommunicationLink");
         }
 
-        // TODO: adumitr: re-enable the tests when feature is fully enabled in the region the tests use
-        // [Fact]
+        [Fact]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         public void TestServerCommunicationLinkRemove()
         {

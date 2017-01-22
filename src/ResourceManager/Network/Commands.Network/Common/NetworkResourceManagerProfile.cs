@@ -14,10 +14,10 @@
 
 namespace Microsoft.Azure.Commands.Network
 {
+    using AutoMapper;
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using AutoMapper;
     using CNM = Microsoft.Azure.Commands.Network.Models;
     using MNM = Microsoft.Azure.Management.Network.Models;
 
@@ -115,10 +115,10 @@ namespace Microsoft.Azure.Commands.Network
             // LoadBalancer
             // CNM to MNM
             Mapper.CreateMap<CNM.PSLoadBalancer, MNM.LoadBalancer>();
-            
+
             // MNM to CNM
             Mapper.CreateMap<MNM.LoadBalancer, CNM.PSLoadBalancer>();
-            
+
             // FrontendIpConfiguration
             // CNM to MNM
             Mapper.CreateMap<CNM.PSFrontendIPConfiguration, MNM.FrontendIPConfiguration>();
@@ -203,12 +203,15 @@ namespace Microsoft.Azure.Commands.Network
             Mapper.CreateMap<MNM.ExpressRouteCircuitSku, CNM.PSExpressRouteCircuitSku>();
             Mapper.CreateMap<MNM.ExpressRouteCircuitPeering, CNM.PSPeering>();
             Mapper.CreateMap<MNM.ExpressRouteCircuitAuthorization, CNM.PSExpressRouteCircuitAuthorization>();
-
+            Mapper.CreateMap<CNM.PSExpressRouteCircuitStats, MNM.ExpressRouteCircuitStats>();
+            Mapper.CreateMap<CNM.PSExpressRouteCircuitArpTable, MNM.ExpressRouteCircuitArpTable>();
+            Mapper.CreateMap<CNM.PSExpressRouteCircuitRoutesTable, MNM.ExpressRouteCircuitRoutesTable>();
+            Mapper.CreateMap<CNM.PSExpressRouteCircuitRoutesTableSummary, MNM.ExpressRouteCircuitRoutesTableSummary>();
             // ExpressRouteCircuitPeering
             // CNM to MNM
             Mapper.CreateMap<CNM.PSPeering, MNM.ExpressRouteCircuitPeering>();
             Mapper.CreateMap<CNM.PSPeeringConfig, MNM.ExpressRouteCircuitPeeringConfig>();
-            
+
             // MNM to CNM
             Mapper.CreateMap<MNM.ExpressRouteCircuitPeering, CNM.PSPeering>();
             Mapper.CreateMap<MNM.ExpressRouteCircuitPeeringConfig, CNM.PSPeeringConfig>();
@@ -221,14 +224,18 @@ namespace Microsoft.Azure.Commands.Network
             // MNM to CNM
             Mapper.CreateMap<MNM.ExpressRouteServiceProvider, CNM.PSExpressRouteServiceProvider>();
             Mapper.CreateMap<MNM.ExpressRouteServiceProviderBandwidthsOffered, CNM.PSExpressRouteServiceProviderBandwidthsOffered>();
+            Mapper.CreateMap<MNM.ExpressRouteCircuitStats, CNM.PSExpressRouteCircuitStats>(); 
+            Mapper.CreateMap<MNM.ExpressRouteCircuitArpTable, CNM.PSExpressRouteCircuitArpTable>();
+            Mapper.CreateMap<MNM.ExpressRouteCircuitRoutesTable, CNM.PSExpressRouteCircuitRoutesTable>();
+            Mapper.CreateMap<MNM.ExpressRouteCircuitRoutesTableSummary, CNM.PSExpressRouteCircuitRoutesTableSummary>();
 
             // ExoressRouteCircuitAuthorization
             // CNM to MNM
             Mapper.CreateMap<CNM.PSExpressRouteCircuitAuthorization, MNM.ExpressRouteCircuitAuthorization>();
-         
+
             // MNM to CNM
             Mapper.CreateMap<MNM.ExpressRouteCircuitAuthorization, CNM.PSExpressRouteCircuitAuthorization>();
-   
+
 
             // Gateways
             // CNM to MNM
@@ -243,6 +250,7 @@ namespace Microsoft.Azure.Commands.Network
             Mapper.CreateMap<CNM.PSVpnClientParameters, MNM.VpnClientParameters>();
             Mapper.CreateMap<CNM.PSVpnClientRevokedCertificate, MNM.VpnClientRevokedCertificate>();
             Mapper.CreateMap<CNM.PSVpnClientRootCertificate, MNM.VpnClientRootCertificate>();
+            Mapper.CreateMap<CNM.PSBgpSettings, MNM.BgpSettings>();
 
             // MNM to CNM
             Mapper.CreateMap<MNM.VirtualNetworkGateway, CNM.PSVirtualNetworkGateway>();
@@ -256,6 +264,7 @@ namespace Microsoft.Azure.Commands.Network
             Mapper.CreateMap<MNM.VpnClientParameters, CNM.PSVpnClientParameters>();
             Mapper.CreateMap<MNM.VpnClientRevokedCertificate, CNM.PSVpnClientRevokedCertificate>();
             Mapper.CreateMap<MNM.VpnClientRootCertificate, CNM.PSVpnClientRootCertificate>();
+            Mapper.CreateMap<MNM.BgpSettings, CNM.PSBgpSettings>();
 
             // Application Gateways
             // CNM to MNM

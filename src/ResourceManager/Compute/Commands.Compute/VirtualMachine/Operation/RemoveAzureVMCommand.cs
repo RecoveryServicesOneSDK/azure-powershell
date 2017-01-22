@@ -15,7 +15,6 @@
 using AutoMapper;
 using Microsoft.Azure.Commands.Compute.Common;
 using Microsoft.Azure.Commands.Compute.Models;
-using Microsoft.Azure.Management.Compute;
 using System.Management.Automation;
 
 namespace Microsoft.Azure.Commands.Compute
@@ -46,7 +45,9 @@ namespace Microsoft.Azure.Commands.Compute
             {
                 if (this.Force.IsPresent || this.ShouldContinue(Microsoft.Azure.Commands.Compute.Properties.Resources.VirtualMachineRemovalConfirmation, Microsoft.Azure.Commands.Compute.Properties.Resources.VirtualMachineRemovalCaption))
                 {
-                    var op = this.VirtualMachineClient.Delete(this.ResourceGroupName, this.Name);
+                    var op = this.VirtualMachineClient.DeleteWithHttpMessagesAsync(
+                        this.ResourceGroupName,
+                        this.Name).GetAwaiter().GetResult();
                     var result = Mapper.Map<PSComputeLongRunningOperation>(op);
                     WriteObject(result);
                 }

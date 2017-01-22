@@ -124,6 +124,15 @@ namespace Microsoft.Azure.Commands.Profile.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot find file &apos;{0}&apos;.
+        /// </summary>
+        internal static string FileNotFound {
+            get {
+                return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The provided subscription ID &quot;{0}&quot; is not a valid Guid..
         /// </summary>
         internal static string InvalidSubscriptionId {
@@ -147,6 +156,15 @@ namespace Microsoft.Azure.Commands.Profile.Properties {
         internal static string NoValidTenant {
             get {
                 return ResourceManager.GetString("NoValidTenant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected subscription is in &apos;{0}&apos; state. .
+        /// </summary>
+        internal static string SelectedSubscriptionNotActive {
+            get {
+                return ResourceManager.GetString("SelectedSubscriptionNotActive", resourceCulture);
             }
         }
         
@@ -205,11 +223,20 @@ namespace Microsoft.Azure.Commands.Profile.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unabe to acquire token for tenant &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Unable to acquire token for tenant &apos;{0}&apos;.
         /// </summary>
         internal static string UnableToAqcuireToken {
             get {
                 return ResourceManager.GetString("UnableToAqcuireToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not authenticate user account &apos;{0}&apos; with tenant &apos;{1}&apos;. Subscriptions in this tenant will not be listed. Please login again using Login-AzureRmAccount to view the subscriptions in this tenant..
+        /// </summary>
+        internal static string UnableToLogin {
+            get {
+                return ResourceManager.GetString("UnableToLogin", resourceCulture);
             }
         }
         

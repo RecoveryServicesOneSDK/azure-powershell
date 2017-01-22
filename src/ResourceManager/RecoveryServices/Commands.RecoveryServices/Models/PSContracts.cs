@@ -175,7 +175,7 @@ namespace Microsoft.Azure.Commands.RecoveryServices
         DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ClientRequestId { get; private set; }
 
-        /// <summary>
+                /// <summary>
         /// Gets the activity Id for the session.
         /// </summary>
         [JsonProperty(PropertyName = "activityId")]
@@ -188,54 +188,6 @@ namespace Microsoft.Azure.Commands.RecoveryServices
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Target { get; private set; }
-    }
-
-    /// <summary>
-    /// Error contract returned when some exception occurs in ASR REST API.
-    /// </summary>
-    [SuppressMessage(
-        "Microsoft.StyleCop.CSharp.MaintainabilityRules",
-        "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "Keeping all contracts together.")]
-    [DataContract(Namespace = "http://schemas.microsoft.com/windowsazure")]
-    public class Error
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Error" /> class.
-        /// </summary>
-        public Error()
-        {
-        }
-
-        /// <summary>
-        /// Gets or sets error code.
-        /// </summary>
-        [DataMember]
-        public string Code { get; set; }
-
-        /// <summary>
-        /// Gets or sets error message.
-        /// </summary>
-        [DataMember]
-        public string Message { get; set; }
-
-        /// <summary>
-        /// Gets or sets possible causes of error.
-        /// </summary>
-        [DataMember]
-        public string PossibleCauses { get; set; }
-
-        /// <summary>
-        /// Gets or sets recommended action to resolve error.
-        /// </summary>
-        [DataMember]
-        public string RecommendedAction { get; set; }
-
-        /// <summary>
-        /// Gets or sets client request Id.
-        /// </summary>
-        [DataMember(Name = "ActivityId")]
-        public string ClientRequestId { get; set; }
     }
 
     /// <summary>
@@ -362,7 +314,7 @@ namespace Microsoft.Azure.Portal.RecoveryServices.Models.Common
         public VaultCreds(string subscriptionId, string resourceName, string managementCert, AcsNamespace acsNamespace, string resourceType = null)
         {
             this.SubscriptionId = subscriptionId;
-            this.ResourceType = string.IsNullOrEmpty(resourceType) ? Constants.ASRVaultType : resourceType;
+            this.ResourceType = string.IsNullOrEmpty(resourceType) ? Constants.VaultType : resourceType;
             this.ResourceName = resourceName;
             this.ManagementCert = managementCert;
             this.AcsNamespace = acsNamespace;
@@ -405,7 +357,7 @@ namespace Microsoft.Azure.Portal.RecoveryServices.Models.Common
     }
 
     /// <summary>
-    /// Class to define ASR Vault credentials
+    /// Class to define ARS Vault credentials
     /// </summary>
     [SuppressMessage(
         "Microsoft.StyleCop.CSharp.MaintainabilityRules",
@@ -443,7 +395,8 @@ namespace Microsoft.Azure.Portal.RecoveryServices.Models.Common
             string siteId,
             string siteName,
             string resourceNamespace,
-            string resourceType)
+            string resourceType,
+            string location)
             : base(subscriptionId, resourceName, managementCert, acsNamespace)
         {
             this.ChannelIntegrityKey = channelIntegrityKey;
@@ -455,6 +408,7 @@ namespace Microsoft.Azure.Portal.RecoveryServices.Models.Common
 
             this.ResourceNamespace = resourceNamespace;
             this.ARMResourceType = resourceType;
+            this.Location = location;
         }
 
         #endregion
@@ -502,6 +456,12 @@ namespace Microsoft.Azure.Portal.RecoveryServices.Models.Common
         [DataMember(Order = 6)]
         public string ARMResourceType { get; set; }
 
+        /// <summary>
+        /// Gets or sets the vault location
+        /// </summary>
+        [DataMember(Order = 7)]
+        public string Location { get; set; }
+
         #endregion
     }
 
@@ -532,7 +492,8 @@ namespace Microsoft.Azure.Portal.RecoveryServices.Models.Common
         /// <param name="resourceName">resource name</param>
         /// <param name="managementCert">management cert</param>
         /// <param name="acsNamespace">acs namespace</param>
-        public BackupVaultCreds(string subscriptionId, string resourceName, string managementCert, AcsNamespace acsNamespace)
+        public BackupVaultCreds(string subscriptionId, string resourceName, string managementCert, 
+            AcsNamespace acsNamespace)
             : base(subscriptionId, resourceName, managementCert, acsNamespace, Constants.BackupVaultType) { }
 
         /// <summary>
@@ -544,7 +505,8 @@ namespace Microsoft.Azure.Portal.RecoveryServices.Models.Common
         /// <param name="managementCert">management cert</param>
         /// <param name="acsNamespace">acs namespace</param>
         /// <param name="agentLinks">agent links</param>
-        public BackupVaultCreds(string subscriptionId, string resourceName, string managementCert, AcsNamespace acsNamespace, string agentLinks)
+        public BackupVaultCreds(string subscriptionId, string resourceName, string managementCert, 
+            AcsNamespace acsNamespace, string agentLinks)
             : this(subscriptionId, resourceName, managementCert, acsNamespace)
         {
             AgentLinks = agentLinks;
@@ -569,10 +531,9 @@ namespace Microsoft.Azure.Portal.RecoveryServices.Models.Common
         /// <param name="acsDetails">authenticating service Details name</param>
         public AcsNamespace(UploadCertificateResponse acsDetails)
         {
-            this.HostName = (acsDetails.Properties as ACSCertificateProperties).GlobalAcsHostName;
-            this.Namespace = (acsDetails.Properties as ACSCertificateProperties).GlobalAcsNamespace;
-            this.ResourceProviderRealm = (acsDetails.Properties as ACSCertificateProperties).GlobalAcsRPRealm;
-
+            this.HostName = acsDetails.Properties.GlobalAcsHostName;
+            this.Namespace = acsDetails.Properties.GlobalAcsNamespace;
+            this.ResourceProviderRealm = acsDetails.Properties.GlobalAcsRPRealm;
         }
 
         /// <summary>

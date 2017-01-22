@@ -295,4 +295,10 @@ Please provide a storage account with the same location as that of the vault.</v
   <data name="VaultCredPathException" xml:space="preserve">
     <value>The target location provided is not a directory. Please provide a directory.</value>
   </data>
+  <data name="ResourceGroupNameNullOrEmpty" xml:space="preserve">
+    <value>Resource Group name mentioned is either null or empty</value>
+  </data>
+  <data name="NoBackupPropertiesProvided" xml:space="preserve">
+    <value>BackupStorageRedundancy is either null or empty.</value>
+  </data>
 </root>
